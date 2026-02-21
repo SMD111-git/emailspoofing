@@ -1,5 +1,5 @@
 import { simpleParser } from "mailparser";
-import { asyncHandler } from "../utils/asynchandler";
+import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiRespone } from "../utils/Apirespones.js";
 
 const Emailparser = asyncHandler(async (req, res) => {

@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "Email Spoofing Detection API",
+    "_postman_id": "email-spoofing-detection",
+    "description": "API for detecting email spoofing attempts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Root Endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": [""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Email - Legitimate (Score 0)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rawEmail\": \"From: legitimate@company.com\\nTo: recipient@example.com\\nSubject: Official Communication\\nReturn-Path: <legitimate@company.com>\\nAuthentication-Results: spf=pass dkim=pass dmarc=pass\\n\\nThis is a legitimate email with all authentication checks passed.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Email - SPF Failed (Score 40)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rawEmail\": \"From: sender@company.com\\nTo: recipient@example.com\\nSubject: Suspicious Email\\nReturn-Path: <different@domain.com>\\nAuthentication-Results: spf=fail dkim=pass dmarc=pass\\n\\nThis email failed SPF check.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Email - All Failed (Score 120)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rawEmail\": \"From: admin@company.com\\nTo: victim@example.com\\nSubject: URGENT: Reset Your Password\\nReturn-Path: <phishing@malicious.com>\\nAuthentication-Results: spf=fail dkim=fail dmarc=fail\\n\\nYour account will be suspended. Click here immediately!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Email - Using Header Parameter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"header\": \"From: sender@example.com\\nTo: recipient@example.com\\nSubject: Test with Header Parameter\\nReturn-Path: <sender@example.com>\\nAuthentication-Results: spf=pass dkim=fail dmarc=pass\\n\\n\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Email - No Authentication Headers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rawEmail\": \"From: unknown@example.com\\nTo: recipient@example.com\\nSubject: Email without authentication headers\\n\\nThis email has no authentication results.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Error - Missing Parameters",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"someOtherField\": \"value\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/email/emailchecking",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "email", "emailchecking"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
